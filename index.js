@@ -7,8 +7,8 @@
  * @prop width: device Width
  * @prop ...props
  *
- * @author Elton Jain
- * @version v1.0.2
+ * @author Elton Jain - forked by JayJayPartay
+ * @version v1.0.3
  */
 
 import React, { Component } from 'react';
