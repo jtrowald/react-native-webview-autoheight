@@ -15,23 +15,14 @@ import React, { Component } from 'react';
 import {
   View,
   Dimensions,
-  WebView,
   Platform,
 } from 'react-native';
-import PropTypes from "prop-types";
+import { WebView } from 'react-native-webview';
 
 const injectedScript = function() {
-  function waitForBridge() {
-    if (window.postMessage.length !== 1){
-      setTimeout(waitForBridge, 200);
-    }
-    else {
-      postMessage(
-        Math.max(document.documentElement.clientHeight, document.documentElement.scrollHeight, document.body.clientHeight, document.body.scrollHeight)
-      )
-    }
-  }
-  waitForBridge();
+  window.ReactNativeWebView.postMessage(
+    Math.max(document.documentElement.clientHeight, document.documentElement.scrollHeight, document.body.clientHeight, document.body.scrollHeight)
+  )
 };
 
 export default class MyWebView extends Component {
@@ -39,14 +30,9 @@ export default class MyWebView extends Component {
     webViewHeight: Number
   };
 
-  static propTypes = {
-    onMessage: PropTypes.func
-  };
-
   static defaultProps = {
-    autoHeight: true,
-    onMessage: () => {}
-  };
+      autoHeight: true,
+  }
 
   constructor (props: Object) {
     super(props);
@@ -58,11 +44,9 @@ export default class MyWebView extends Component {
   }
 
   _onMessage(e) {
-    const { onMessage } = this.props;
     this.setState({
       webViewHeight: parseInt(e.nativeEvent.data)
     });
-    onMessage(e);
   }
 
   stopLoading() {
@@ -84,11 +68,11 @@ export default class MyWebView extends Component {
         ref={(ref) => { this.webview = ref; }}
         injectedJavaScript={Platform.OS === 'ios' ? iosScript : androidScript}
         scrollEnabled={this.props.scrollEnabled || false}
+        onMessage={this._onMessage}
         javaScriptEnabled={true}
         automaticallyAdjustContentInsets={true}
         {...this.props}
-	onMessage={this._onMessage}
-	style={[{ width: _w }, this.props.style, { height: _h }]}
+        style={[{width: _w}, this.props.style, {height: _h}]}
       />
     )
   }
