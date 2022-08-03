@@ -20,7 +20,7 @@ import {
 import { WebView } from 'react-native-webview';
 
 const injectedScript = function() {
-  window.ReactNativeWebView.postMessage(
+  window?.ReactNativeWebView?.postMessage(
     Math.max(document.documentElement.clientHeight, document.documentElement.scrollHeight, document.body.clientHeight, document.body.scrollHeight)
   )
 };
